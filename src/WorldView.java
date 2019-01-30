@@ -11,11 +11,11 @@ final class WorldView
    public int tileHeight;
    public Viewport viewport;
    
-   public final int COLOR_MASK = 0xffffff;
-   public final int KEYED_IMAGE_MIN = 5;
-   private final int KEYED_RED_IDX = 2;
-   private final int KEYED_GREEN_IDX = 3;
-   private final int KEYED_BLUE_IDX = 4;
+//   public final int COLOR_MASK = 0xffffff;
+//   public final int KEYED_IMAGE_MIN = 5;
+//   private final int KEYED_RED_IDX = 2;
+//   private final int KEYED_GREEN_IDX = 3;
+//   private final int KEYED_BLUE_IDX = 4;
 
    public WorldView(int numRows, int numCols, PApplet screen, WorldModel world,
       int tileWidth, int tileHeight)
@@ -27,20 +27,20 @@ final class WorldView
       this.viewport = new Viewport(numRows, numCols);
    }
 
-public void drawViewport(Functions functions)
+public void drawViewport()
    {
-      drawBackground(functions);
-      drawEntities(functions);
+      drawBackground();
+      drawEntities();
    }
 
-public void drawBackground(Functions functions)
+public void drawBackground()
    {
       for (int row = 0; row < viewport.numRows; row++)
       {
          for (int col = 0; col < viewport.numCols; col++)
          {
-            Point worldPoint = viewport.viewportToWorld(functions, col, row);
-            Optional<PImage> image = world.getBackgroundImage(functions,
+            Point worldPoint = viewport.viewportToWorld( col, row);
+            Optional<PImage> image = world.getBackgroundImage(
                worldPoint);
             if (image.isPresent())
             {
@@ -51,29 +51,29 @@ public void drawBackground(Functions functions)
       }
    }
 
-	public void drawEntities(Functions functions)
+	public void drawEntities()
 	   {
 	      for (Entity entity : world.entities)
 	      {
 	         Point pos = entity.position;
 	
-	         if (viewport.contains(functions, pos))
+	         if (viewport.contains( pos))
 	         {
-	            Point viewPoint = viewport.worldToViewport(functions, pos.x, pos.y);
-	            screen.image(Functions.getCurrentImage(entity),
+	            Point viewPoint = viewport.worldToViewport( pos.x, pos.y);
+	            screen.image(ImageStore.getCurrentImage(entity),
 	               viewPoint.x * tileWidth, viewPoint.y * tileHeight);
 	         }
 	      }
 	   }
 
-	public void shiftView(Functions functions, int colDelta, int rowDelta)
+	public void shiftView( int colDelta, int rowDelta)
 	   {
 	      int newCol = clamp(viewport.col + colDelta, 0,
 	         world.numCols - viewport.numCols);
 	      int newRow = clamp(viewport.row + rowDelta, 0,
 	         world.numRows - viewport.numRows);
 	
-	      viewport.shift(functions, newCol, newRow);
+	      viewport.shift( newCol, newRow);
 	   }
 
 	public int clamp(int value, int low, int high)

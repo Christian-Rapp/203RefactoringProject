@@ -29,7 +29,7 @@ final class Point
       return result;
    }
 
-public boolean adjacent(Functions functions, Point p2)
+public boolean adjacent(Point p2)
    {
       return (x == p2.x && Math.abs(y - p2.y) == 1) ||
          (y == p2.y && Math.abs(x - p2.x) == 1);

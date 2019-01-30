@@ -17,7 +17,7 @@ final class EventScheduler
       this.timeScale = timeScale;
    }
 
-public void scheduleEvent(Functions functions, Entity entity, Action action, long afterPeriod)
+public void scheduleEvent(Entity entity, Action action, long afterPeriod)
 		   {
 		      long time = System.currentTimeMillis() +
 		         (long)(afterPeriod * timeScale);
@@ -32,7 +32,7 @@ public void scheduleEvent(Functions functions, Entity entity, Action action, lon
 		      pendingEvents.put(entity, pending);
 		   }
 
-public void unscheduleAllEvents(Functions functions, Entity entity)
+public void unscheduleAllEvents(Entity entity)
 		   {
 		      List<Event> pending = pendingEvents.remove(entity);
 
@@ -45,7 +45,7 @@ public void unscheduleAllEvents(Functions functions, Entity entity)
 		      }
 		   }
 
-public void removePendingEvent(Functions functions, Event event)
+public void removePendingEvent(Event event)
 		   {
 		      List<Event> pending = pendingEvents.get(event.entity);
 
@@ -55,16 +55,16 @@ public void removePendingEvent(Functions functions, Event event)
 		      }
 		   }
 
-public void updateOnTime(Functions functions, long time)
+public void updateOnTime(long time)
    {
       while (!eventQueue.isEmpty() &&
          eventQueue.peek().time < time)
       {
          Event next = eventQueue.poll();
          
-         removePendingEvent(functions, next);
+         removePendingEvent(next);
          
-         next.action.executeAction(functions, this);
+         next.action.executeAction(this);
       }
    }
 }

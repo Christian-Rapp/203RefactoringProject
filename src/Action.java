@@ -16,63 +16,63 @@ final class Action
       this.repeatCount = repeatCount;
    }
 
-public void executeAction(Functions functions, EventScheduler scheduler)
+public void executeAction(EventScheduler scheduler)
    {
       switch (kind)
       {
       case ACTIVITY:
-         executeActivityAction(functions, scheduler);
+         executeActivityAction( scheduler);
          break;
 
       case ANIMATION:
-         executeAnimationAction(functions, scheduler);
+         executeAnimationAction( scheduler);
          break;
       }
    }
 
-public void executeAnimationAction(Functions functions, EventScheduler scheduler)
+public void executeAnimationAction( EventScheduler scheduler)
 		   {
-		      entity.nextImage(functions);
+		      entity.nextImage();
 
 		      if (repeatCount != 1)
 		      {
-		         scheduler.scheduleEvent(functions, entity,
+		         scheduler.scheduleEvent( entity,
 		            entity.createAnimationAction(Math.max(repeatCount - 1, 0)),
-		            entity.getAnimationPeriod(functions));
+		            entity.getAnimationPeriod() );
 		      }
 		   }
 
-public void executeActivityAction(Functions functions, EventScheduler scheduler)
+public void executeActivityAction( EventScheduler scheduler)
 		   {
 		      switch (entity.kind)
 		      {
 		      case MINER_FULL:
-		         entity.executeMinerFullActivity(functions, world,
+		         entity.executeMinerFullActivity( world,
 		            imageStore, scheduler);
 		         break;
 
 		      case MINER_NOT_FULL:
-		         entity.executeMinerNotFullActivity(functions, world,
+		         entity.executeMinerNotFullActivity( world,
 		            imageStore, scheduler);
 		         break;
 
 		      case ORE:
-		         entity.executeOreActivity(functions, world, imageStore,
+		         entity.executeOreActivity( world, imageStore,
 		            scheduler);
 		         break;
 
 		      case ORE_BLOB:
-		         entity.executeOreBlobActivity(functions, world,
+		         entity.executeOreBlobActivity( world,
 		            imageStore, scheduler);
 		         break;
 
 		      case QUAKE:
-		         entity.executeQuakeActivity(functions, world, imageStore,
+		         entity.executeQuakeActivity( world, imageStore,
 		            scheduler);
 		         break;
 
 		      case VEIN:
-		         entity.executeVeinActivity(functions, world, imageStore,
+		         entity.executeVeinActivity( world, imageStore,
 		            scheduler);
 		         break;
 

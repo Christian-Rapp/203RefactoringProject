@@ -9,8 +9,8 @@ public final class VirtualWorld
 {
    public static final int TIMER_ACTION_PERIOD = 100;
 
-   public static final int VIEW_WIDTH = 640;
-   public static final int VIEW_HEIGHT = 480;
+   public static final int VIEW_WIDTH = 1280;
+   public static final int VIEW_HEIGHT = 960;
    public static final int TILE_WIDTH = 32;
    public static final int TILE_HEIGHT = 32;
    public static final int WORLD_WIDTH_SCALE = 2;
@@ -61,29 +61,29 @@ public final class VirtualWorld
       this.imageStore = new ImageStore(
          createImageColored(TILE_WIDTH, TILE_HEIGHT, DEFAULT_IMAGE_COLOR));
       this.world = new WorldModel(WORLD_ROWS, WORLD_COLS,
-         createDefaultBackground(null, imageStore));
+         createDefaultBackground( imageStore));
       this.view = new WorldView(VIEW_ROWS, VIEW_COLS, this, world,
          TILE_WIDTH, TILE_HEIGHT);
       this.scheduler = new EventScheduler(timeScale);
 
-      loadImages(null, IMAGE_LIST_FILE_NAME, imageStore, this);
+      loadImages( IMAGE_LIST_FILE_NAME, imageStore, this);
       loadWorld(world, LOAD_FILE_NAME, imageStore);
 
-      scheduleActions(null, world, scheduler, imageStore);
+      scheduleActions( world, scheduler, imageStore);
 
       next_time = System.currentTimeMillis() + TIMER_ACTION_PERIOD;
    }
 
-   public void draw(Functions functions)
+   public void draw()
    {
       long time = System.currentTimeMillis();
       if (time >= next_time)
       {
-         this.scheduler.updateOnTime(functions, time);
+         this.scheduler.updateOnTime( time);
          next_time = time + TIMER_ACTION_PERIOD;
       }
 
-      view.drawViewport(functions);
+      view.drawViewport();
    }
 
    public void keyPressed()
@@ -109,22 +109,22 @@ public final class VirtualWorld
                break;
          }
 
-		view.shiftView(null, dx, dy);
+		view.shiftView( dx, dy);
       }
    }
 
-   public void scheduleActions(Functions functions, WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
+   public void scheduleActions( WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
    {
       for (Entity entity : world.entities)
       {
-         entity.scheduleActions(functions, eventScheduler, world, imageStore);
+         entity.scheduleActions( eventScheduler, world, imageStore);
       }
    }
 
-public static Background createDefaultBackground(Functions functions, ImageStore imageStore)
+public static Background createDefaultBackground( ImageStore imageStore)
    {
       return new Background(DEFAULT_IMAGE_NAME,
-         imageStore.getImageList(functions, DEFAULT_IMAGE_NAME));
+         imageStore.getImageList( DEFAULT_IMAGE_NAME));
    }
 
    public static PImage createImageColored(int width, int height, int color)
@@ -139,13 +139,13 @@ public static Background createDefaultBackground(Functions functions, ImageStore
       return img;
    }
 
-   private static void loadImages(Functions functions, String filename, ImageStore imageStore,
+   private static void loadImages( String filename, ImageStore imageStore,
       PApplet screen)
    {
       try
       {
          Scanner in = new Scanner(new File(filename));
-         imageStore.loadImages(in, functions, screen);
+         imageStore.loadImages(in, screen);
       }
       catch (FileNotFoundException e)
       {
