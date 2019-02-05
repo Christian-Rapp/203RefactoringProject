@@ -11,7 +11,7 @@ final class Functions
 {
    private final static Random rand = new Random();
 
-   public static Random getRand() {
+   private Random getRand() {
 	return rand;
 }
    public static Optional<Entity> nearestEntity(List<Entity> entities,
