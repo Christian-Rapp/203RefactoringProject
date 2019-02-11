@@ -13,8 +13,8 @@ final class WorldModel
    public int numRows;
    public int numCols;
    public Background background[][];
-   public Entity occupancy[][];
-   public Set<Entity> entities;
+   public EntityInterface occupancy[][];
+   public Set<EntityInterface> entities;
    
    private  final String BLOB_KEY = "blob";
    private  final String BLOB_ID_SUFFIX = " -- blob";
@@ -75,7 +75,7 @@ final class WorldModel
       this.numRows = numRows;
       this.numCols = numCols;
       this.background = new Background[numRows][numCols];
-      this.occupancy = new Entity[numRows][numCols];
+      this.occupancy = new EntityInterface[numRows][numCols];
       this.entities = new HashSet<>();
 
       for (int row = 0; row < numRows; row++)
@@ -84,30 +84,30 @@ final class WorldModel
       }
    }
 
-public void addEntity(Entity entity)
+public void addEntity(EntityInterface entity)
 {
-if (withinBounds(entity.position))
+if (withinBounds(entity.getPosition()))
    {
-      setOccupancyCell(entity.position, entity);
+      setOccupancyCell(entity.getPosition(), entity);
       entities.add(entity);
    }
 }
 
-public void moveEntity(Entity entity, Point pos)
+public void moveEntity(EntityInterface entity, Point pos)
 {
-   Point oldPos = entity.position;
+   Point oldPos = entity.getPosition();
    if (withinBounds(pos) && !pos.equals(oldPos))
    {
       setOccupancyCell(oldPos, null);
       removeEntityAt(pos);
       setOccupancyCell(pos, entity);
-      entity.position = pos;
+      entity.setPosition(pos);
    }
 }
 
-public void removeEntity( Entity entity)
+public void removeEntity( EntityInterface entity)
 {
-   removeEntityAt(entity.position);
+   removeEntityAt(entity.getPosition());
 }
 
 public void removeEntityAt(Point pos)
@@ -115,17 +115,17 @@ public void removeEntityAt(Point pos)
    if (withinBounds(pos)
       && getOccupancyCell(pos) != null)
    {
-      Entity entity = getOccupancyCell(pos);
+      EntityInterface entity = getOccupancyCell(pos);
 
       /* this moves the entity just outside of the grid for
          debugging purposes */
-      entity.position = new Point(-1, -1);
+      entity.setPosition( new Point(-1, -1));
       entities.remove(entity);
       setOccupancyCell(pos, null);
    }
 }
 
-public Optional<Entity> getOccupant(Point pos)
+public Optional<EntityInterface> getOccupant(Point pos)
    {
       if (isOccupied(pos))
       {
@@ -137,12 +137,12 @@ public Optional<Entity> getOccupant(Point pos)
       }
    }
 
-public Entity getOccupancyCell(Point pos)
+public EntityInterface getOccupancyCell(Point pos)
    {
       return occupancy[pos.y][pos.x];
    }
 
-public void setOccupancyCell(Point pos, Entity entity)
+public void setOccupancyCell(Point pos, EntityInterface entity)
 		   {
 		      occupancy[pos.y][pos.x] = entity;
 		   }
@@ -167,7 +167,7 @@ public boolean parseMiner(String[] properties, ImageStore imageStore)
 		      {
 		         Point pt = new Point(Integer.parseInt(properties[MINER_COL]),
 		            Integer.parseInt(properties[MINER_ROW]));
-		         Entity entity = createMinerNotFull(properties[MINER_ID],
+		         EntityInterface entity = createMinerNotFull(properties[MINER_ID],
 		            Integer.parseInt(properties[MINER_LIMIT]),
 		            pt,
 		            Integer.parseInt(properties[MINER_ACTION_PERIOD]),
@@ -186,7 +186,7 @@ public boolean parseObstacle(String[] properties, ImageStore imageStore)
 		         Point pt = new Point(
 		            Integer.parseInt(properties[OBSTACLE_COL]),
 		            Integer.parseInt(properties[OBSTACLE_ROW]));
-		         Entity entity = createObstacle(properties[OBSTACLE_ID],
+		         EntityInterface entity = createObstacle(properties[OBSTACLE_ID],
 		            pt, imageStore.getImageList(OBSTACLE_KEY));
 		         tryAddEntity(entity);
 		      }
@@ -200,7 +200,7 @@ public boolean parseOre(String[] properties, ImageStore imageStore)
 		      {
 		         Point pt = new Point(Integer.parseInt(properties[ORE_COL]),
 		            Integer.parseInt(properties[ORE_ROW]));
-		         Entity entity = createOre(properties[ORE_ID],
+		         EntityInterface entity = createOre(properties[ORE_ID],
 		            pt, Integer.parseInt(properties[ORE_ACTION_PERIOD]),
 		            imageStore.getImageList(ORE_KEY));
 		         tryAddEntity(entity);
@@ -215,7 +215,7 @@ public boolean parseSmith(String[] properties, ImageStore imageStore)
 		      {
 		         Point pt = new Point(Integer.parseInt(properties[SMITH_COL]),
 		            Integer.parseInt(properties[SMITH_ROW]));
-		         Entity entity = createBlacksmith(properties[SMITH_ID],
+		         EntityInterface entity = createBlacksmith(properties[SMITH_ID],
 		            pt, imageStore.getImageList(SMITH_KEY));
 		         tryAddEntity(entity);
 		      }
@@ -229,7 +229,7 @@ public boolean parseVein(String[] properties, ImageStore imageStore)
 		      {
 		         Point pt = new Point(Integer.parseInt(properties[VEIN_COL]),
 		            Integer.parseInt(properties[VEIN_ROW]));
-		         Entity entity = createVein(properties[VEIN_ID],
+		         EntityInterface entity = createVein(properties[VEIN_ID],
 		            pt,
 		            Integer.parseInt(properties[VEIN_ACTION_PERIOD]),
 		            imageStore.getImageList(VEIN_KEY));
@@ -292,62 +292,57 @@ public boolean processLine(String line, ImageStore imageStore)
 		   }
 
 
-public Entity createBlacksmith(String id, Point position,
+public EntityInterface createBlacksmith(String id, Point position,
       List<PImage> images)
    {
-      return new Entity(EntityKind.BLACKSMITH, id, position, images,
-         0, 0, 0, 0);
+      return new Blacksmith(id, position, images);
    }
 
+	public EntityInterface createMinerFull(String id, int resourceLimit,Point position,
+			int actionPeriod, int animationPeriod, List<PImage> images)
+	{
+		return new Miner_Full(id, animationPeriod, position, animationPeriod, animationPeriod, images);
+	}
 
-   public Entity createMinerFull(String id, int resourceLimit,
+   public EntityInterface createMinerNotFull(String id, int resourceLimit,
       Point position, int actionPeriod, int animationPeriod,
       List<PImage> images)
    {
-      return new Entity(EntityKind.MINER_FULL, id, position, images,
-         resourceLimit, resourceLimit, actionPeriod, animationPeriod);
+      return new Miner_Not_Full(id, position, images,
+         resourceLimit, actionPeriod, animationPeriod);
    }
 
-   public Entity createMinerNotFull(String id, int resourceLimit,
-      Point position, int actionPeriod, int animationPeriod,
+   public EntityInterface createObstacle(String id, Point position,
       List<PImage> images)
    {
-      return new Entity(EntityKind.MINER_NOT_FULL, id, position, images,
-         resourceLimit, 0, actionPeriod, animationPeriod);
+      return new Obstacle(id, position, images);
    }
 
-   public Entity createObstacle(String id, Point position,
+   public EntityInterface createOre(String id, Point position, int actionPeriod,
       List<PImage> images)
    {
-      return new Entity(EntityKind.OBSTACLE, id, position, images,
-         0, 0, 0, 0);
+      return new Ore(id, position, images,
+         actionPeriod);
    }
 
-   public Entity createOre(String id, Point position, int actionPeriod,
-      List<PImage> images)
-   {
-      return new Entity(EntityKind.ORE, id, position, images, 0, 0,
-         actionPeriod, 0);
-   }
-
-   public Entity createOreBlob(String id, Point position,
+   public EntityInterface createOreBlob(String id, Point position,
       int actionPeriod, int animationPeriod, List<PImage> images)
    {
-      return new Entity(EntityKind.ORE_BLOB, id, position, images,
-            0, 0, actionPeriod, animationPeriod);
+      return new Ore_Blob(id, position, images,
+             actionPeriod, animationPeriod);
    }
 
-   public Entity createQuake(Point position, List<PImage> images)
+   public EntityInterface createQuake(Point position, List<PImage> images)
    {
-      return new Entity(EntityKind.QUAKE, QUAKE_ID, position, images,
-         0, 0, QUAKE_ACTION_PERIOD, QUAKE_ANIMATION_PERIOD);
+      return new Quake(QUAKE_ID, position, images,
+         QUAKE_ACTION_PERIOD, QUAKE_ANIMATION_PERIOD);
    }
 
-   public Entity createVein(String id, Point position, int actionPeriod,
+   public EntityInterface createVein(String id, Point position, int actionPeriod,
       List<PImage> images)
    {
-      return new Entity(EntityKind.VEIN, id, position, images, 0, 0,
-         actionPeriod, 0);
+      return new Vein( id, position, images,
+         actionPeriod);
    }
 
 public boolean withinBounds(Point pos)
@@ -362,23 +357,50 @@ public boolean isOccupied( Point pos)
          getOccupancyCell(pos) != null;
    }
 
-public Optional<Entity> findNearest(Point pos, EntityKind kind)
+public Optional<EntityInterface> findNearest(Point pos, EntityInterface ei)
 		   {
-		      List<Entity> ofType = new LinkedList<>();
-		      for (Entity entity : entities)
+		      List<EntityInterface> ofType = new LinkedList<>();
+		      for (EntityInterface entity : entities)
 		      {
-		         if (entity.kind == kind)
+		         if (entity.getClass().equals(ei.getClass()))
 		         {
 		            ofType.add(entity);
 		         }
 		      }
 
-		      return Functions.nearestEntity(ofType, pos);
+		      return nearestEntity(ofType, pos);
 		   }
 
-public void tryAddEntity(Entity entity)
+public static Optional<EntityInterface> nearestEntity(List<EntityInterface> entities,
+	      Point pos)
+	   {
+	      if (entities.isEmpty())
+	      {
+	         return Optional.empty();
+	      }
+	      else
+	      {
+	         EntityInterface nearest = entities.get(0);
+	         int nearestDistance = nearest.getPosition().distanceSquared(null, pos);
+
+	         for (EntityInterface other : entities)
+	         {
+	            int otherDistance = other.getPosition().distanceSquared(null, pos);
+
+	            if (otherDistance < nearestDistance)
+	            {
+	               nearest = other;
+	               nearestDistance = otherDistance;
+	            }
+	         }
+
+	         return Optional.of(nearest);
+	      }
+	   }
+
+public void tryAddEntity(EntityInterface entity)
    {
-      if (isOccupied(entity.position))
+      if (isOccupied(entity.getPosition()))
       {
          // arguably the wrong type of exception, but we are not
          // defining our own exceptions yet
@@ -460,19 +482,19 @@ public void setBackground(Background[][] background) {
 	this.background = background;
 }
 
-public Entity[][] getOccupancy() {
+public EntityInterface[][] getOccupancy() {
 	return occupancy;
 }
 
-public void setOccupancy(Entity[][] occupancy) {
+public void setOccupancy(EntityInterface[][] occupancy) {
 	this.occupancy = occupancy;
 }
 
-public Set<Entity> getEntities() {
+public Set<EntityInterface> getEntities() {
 	return entities;
 }
 
-public void setEntities(Set<Entity> entities) {
+public void setEntities(Set<EntityInterface> entities) {
 	this.entities = entities;
 }
 

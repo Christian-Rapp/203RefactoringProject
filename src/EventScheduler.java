@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 final class EventScheduler
 {
    public PriorityQueue<Event> eventQueue;
-   public Map<Entity, List<Event>> pendingEvents;
+   public Map<EntityInterface, List<Event>> pendingEvents;
    public double timeScale;
 
    public EventScheduler(double timeScale)
@@ -17,11 +17,11 @@ final class EventScheduler
       this.timeScale = timeScale;
    }
 
-public void scheduleEvent(Entity entity, Action action, long afterPeriod)
+public void scheduleEvent(EntityInterface entity, ActionInterface actionInterface, long afterPeriod)
 		   {
 		      long time = System.currentTimeMillis() +
 		         (long)(afterPeriod * timeScale);
-		      Event event = new Event(action, time, entity);
+		      Event event = new Event(actionInterface, time, entity);
 
 		      eventQueue.add(event);
 
@@ -32,7 +32,7 @@ public void scheduleEvent(Entity entity, Action action, long afterPeriod)
 		      pendingEvents.put(entity, pending);
 		   }
 
-public void unscheduleAllEvents(Entity entity)
+public void unscheduleAllEvents(EntityInterface entity)
 		   {
 		      List<Event> pending = pendingEvents.remove(entity);
 

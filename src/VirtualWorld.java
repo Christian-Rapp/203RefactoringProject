@@ -115,10 +115,13 @@ public final class VirtualWorld
 
    public void scheduleActions( WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
    {
-      for (Entity entity : world.entities)
+      for (EntityInterface entity : world.entities)
       {
-         entity.scheduleActions( eventScheduler, world, imageStore);
-      }
+    	 if (entity instanceof Actionable) {
+         ((Actionable)entity).scheduleActions( eventScheduler, world, imageStore);
+    	 }
+    	 
+    	 }
    }
 
 public static Background createDefaultBackground( ImageStore imageStore)

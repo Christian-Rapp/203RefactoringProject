@@ -53,9 +53,9 @@ public void drawBackground()
 
 	public void drawEntities()
 	   {
-	      for (Entity entity : world.entities)
+	      for (EntityInterface entity : world.entities)
 	      {
-	         Point pos = entity.position;
+	         Point pos = entity.getPosition();
 	
 	         if (viewport.contains( pos))
 	         {

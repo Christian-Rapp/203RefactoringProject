@@ -1,13 +1,13 @@
 final class Event
 {
-   public Action action;
+   public ActionInterface action;
    public long time;
-   public Entity entity;
+   public EntityInterface entity;
 
-   public Event(Action action, long time, Entity entity)
+   public Event(ActionInterface actionInterface, long time, EntityInterface entity2)
    {
-      this.action = action;
+      this.action = actionInterface;
       this.time = time;
-      this.entity = entity;
+      this.entity = entity2;
    }
 }
