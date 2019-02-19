@@ -3,70 +3,30 @@ import java.util.Optional;
 
 import processing.core.PImage;
 
-public class Ore_Blob implements Animated{
-	public String id;
-	public Point position;
-	public List<PImage> images;
-	public int imageIndex;
-	public int actionPeriod;
-	public int animationPeriod;
+public class Ore_Blob extends Animated{
 
 	public Ore_Blob(String id, Point position, List<PImage> images,
 		      int actionPeriod, int animationPeriod
 		      ) {
 		
-		this.id = id;
-		this.position = position;
-		this.images = images;
-		this.imageIndex = 0;
-		this.actionPeriod = actionPeriod;
-		this.animationPeriod = animationPeriod;
+		setId(id);
+		setPosition(position);
+		setImages( images);
+		setImageIndex( 0);
+		setActionPeriod( actionPeriod);
+		setAnimationPeriod( animationPeriod);
 	}
 
 	
-	public int getAnimationPeriod() {
-		return animationPeriod;
-	}
-
-
-	public PImage getCurrentImage() {
-		return images.get(imageIndex);
-	}
-	
-	public int getActionPeriod() {
-		return actionPeriod;
-	}
-	
-	public void nextImage() {
-		imageIndex = (imageIndex + 1) % images.size();
-	}
-	
-	public Point getPosition()
-	{
-		return position;
-	}
-	
-	public void setPosition(Point point)
-	{
-		this.position = point;
-	}
 	
 	public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore) {
-		scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
-		scheduler.scheduleEvent(this, createAnimationAction(0), animationPeriod);	
+		scheduler.scheduleEvent(this, createActivityAction(world, imageStore), getActionPeriod());
+		scheduler.scheduleEvent(this, createAnimationAction(0), getAnimationPeriod());	
 }
 	
-	public ActionInterface createAnimationAction(int repeatCount) {
-		return new AnimationAction( this, null, null, repeatCount);
-	}
-
-	public ActionInterface createActivityAction(WorldModel world, ImageStore imageStore) {
-		return new ActivityAction( this, world, imageStore, 0);
-	}
-	
 	public void executeOreBlobActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-		Optional<EntityInterface> blobTarget = world.findNearest(position, new Vein());
-		long nextPeriod = actionPeriod;
+		Optional<EntityInterface> blobTarget = world.findNearest(getPosition(), new Vein());
+		long nextPeriod = getActionPeriod();
 
 		if (blobTarget.isPresent()) {
 			Point tgtPos = blobTarget.get().getPosition();
@@ -75,7 +35,7 @@ public class Ore_Blob implements Animated{
 				EntityInterface quake = world.createQuake(tgtPos, imageStore.getImageList(world.QUAKE_KEY));
 
 				world.addEntity(quake);
-				nextPeriod += actionPeriod;
+				nextPeriod += getActionPeriod();
 				((Actionable)quake).scheduleActions(scheduler, world, imageStore);
 			}
 		}
@@ -84,14 +44,14 @@ public class Ore_Blob implements Animated{
 	}
 	
 	public boolean moveToOreBlob(WorldModel world, EntityInterface entityInterface, EventScheduler scheduler) {
-		if (position.adjacent(entityInterface.getPosition())) {
+		if (getPosition().adjacent(entityInterface.getPosition())) {
 			world.removeEntity(entityInterface);
 			scheduler.unscheduleAllEvents(entityInterface);
 			return true;
 		} else {
 			Point nextPos = nextPositionOreBlob(world, entityInterface.getPosition());
 
-			if (!position.equals(nextPos)) {
+			if (!getPosition().equals(nextPos)) {
 				Optional<EntityInterface> occupant = world.getOccupant(nextPos);
 				if (occupant.isPresent()) {
 					scheduler.unscheduleAllEvents(occupant.get());
@@ -104,18 +64,18 @@ public class Ore_Blob implements Animated{
 	}
 	
 	public Point nextPositionOreBlob(WorldModel world, Point destPos) {
-		int horiz = Integer.signum(destPos.x - position.x);
-		Point newPos = new Point(position.x + horiz, position.y);
+		int horiz = Integer.signum(destPos.x - getPosition().x);
+		Point newPos = new Point(getPosition().x + horiz, getPosition().y);
 
 		Optional<EntityInterface> occupant = world.getOccupant(newPos);
 
 		if (horiz == 0 || (occupant.isPresent() && !(occupant.get().getClass().equals(new Ore().getClass())))) {
-			int vert = Integer.signum(destPos.y - position.y);
-			newPos = new Point(position.x, position.y + vert);
+			int vert = Integer.signum(destPos.y - getPosition().y);
+			newPos = new Point(getPosition().x, getPosition().y + vert);
 			occupant = world.getOccupant(newPos);
 
 			if (vert == 0 || (occupant.isPresent() && !(occupant.get().getClass().equals(new Ore().getClass())))) {
-				newPos = position;
+				newPos = getPosition();
 			}
 		}
 

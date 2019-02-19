@@ -1,9 +1,9 @@
 import java.util.List;
 import processing.core.PImage;
 
-final class Background implements Drawable
+final class Background extends Drawable
 {
-   public String id;
+   
    public List<PImage> images;
    public int imageIndex;
    
@@ -16,12 +16,9 @@ final class Background implements Drawable
 
    public Background(String id, List<PImage> images)
    {
-      this.id = id;
-      this.images = images;
+      setId( id);
+      setImages(images);
    }
-   
-   public PImage getCurrentImage() {
-		return images.get(imageIndex);
-	}
+  
    
 }

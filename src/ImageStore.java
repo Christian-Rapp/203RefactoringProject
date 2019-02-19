@@ -82,7 +82,7 @@ final class ImageStore {
 		img.updatePixels();
 	}
 
-	public static PImage getCurrentImage(Drawable entity) {
-		return entity.getCurrentImage();
+	public static PImage getCurrentImage(Drawable drwble) {
+		return drwble.getCurrentImage();
 	}
 }

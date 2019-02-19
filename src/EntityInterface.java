@@ -1,13 +1,28 @@
+import java.util.List;
+
 import processing.core.PImage;
 
-public interface EntityInterface extends Drawable{
+public abstract class EntityInterface extends Drawable{
 
-	public abstract void nextImage();
+	// protected String id;
+	private Point position;
 	
-	public abstract Point getPosition();
+//	protected List<PImage> images;
+//	protected int imageIndex;
 	
-	public abstract void setPosition(Point point);
+	public void nextImage() {
+		setImageIndex((getImageIndex() + 1) % getImages().size());
+	}
 	
+	public Point getPosition()
+	{
+		return position;
+	}
+	
+	public void setPosition(Point point)
+	{
+		this.position = point;
+	}
 	
 	
 	
