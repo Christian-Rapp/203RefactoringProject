@@ -19,6 +19,16 @@ final class Background extends Drawable
       setId( id);
       setImages(images);
    }
+   
+   public Background(String[] properties,ImageStore imageStore)
+   {
+	   Point pt = new Point(Integer.parseInt(properties[Background.BGND_COL]),
+	            Integer.parseInt(properties[Background.BGND_ROW]));
+	  String id = properties[Background.BGND_ID];
+      setId( id);
+      setImages(images);
+      setImageIndex(0);
+   }
   
    
 }

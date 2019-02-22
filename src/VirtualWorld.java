@@ -115,7 +115,7 @@ public final class VirtualWorld
 
    public void scheduleActions( WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
    {
-      for (EntityInterface entity : world.entities)
+      for (Entity entity : world.entities)
       {
     	 if (entity instanceof Actionable) {
          ((Actionable)entity).scheduleActions( eventScheduler, world, imageStore);

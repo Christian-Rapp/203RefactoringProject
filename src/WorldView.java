@@ -53,7 +53,7 @@ public void drawBackground()
 
 	public void drawEntities()
 	   {
-	      for (EntityInterface entity : world.entities)
+	      for (Entity entity : world.entities)
 	      {
 	         Point pos = entity.getPosition();
 	

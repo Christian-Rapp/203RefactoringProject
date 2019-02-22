@@ -1,18 +1,13 @@
 
-public class ActivityAction implements ActionInterface{
+public class ActivityAction extends Action{
 
-	   public Actionable entity;
-	   public WorldModel world;
-	   public ImageStore imageStore;
-	   public int repeatCount;
 
 	   public ActivityAction( Actionable entity, WorldModel world,
 	      ImageStore imageStore, int repeatCount)
 	   {
-	      this.entity = entity;
-	      this.world = world;
-	      this.imageStore = imageStore;
-	      this.repeatCount = repeatCount;
+		  super(world, imageStore, repeatCount);
+	      setEntity(entity);
+	      
 	   }
 
 	public void executeAction(EventScheduler scheduler)
@@ -24,7 +19,7 @@ public class ActivityAction implements ActionInterface{
 	public void executeActivityAction( EventScheduler scheduler)
 	   {
 	      
-	      entity.executeActivity(world, imageStore, scheduler);
+	      ((Actionable)entity).executeActivity(world, imageStore, scheduler);
 	   }
 	
 }

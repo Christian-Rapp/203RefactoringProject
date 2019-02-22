@@ -5,16 +5,22 @@ import processing.core.PImage;
 
 public class Ore_Blob extends Animated{
 
-	public Ore_Blob(String id, Point position, List<PImage> images,
-		      int actionPeriod, int animationPeriod
+	private  final String BLOB_KEY = "blob";
+  private  final String BLOB_ID_SUFFIX = " -- blob";
+  private  final int BLOB_PERIOD_SCALE = 4;
+  private  final int BLOB_ANIMATION_MIN = 50;
+  private  final int BLOB_ANIMATION_MAX = 150;
+	
+	public Ore_Blob(String id, Point position, ImageStore imageStore,
+		      int actionPeriod
 		      ) {
 		
-		setId(id);
+		setId(id + BLOB_ID_SUFFIX);
 		setPosition(position);
-		setImages( images);
-		setImageIndex( 0);
-		setActionPeriod( actionPeriod);
-		setAnimationPeriod( animationPeriod);
+		setImages(imageStore.getImageList(BLOB_KEY));
+		setImageIndex(0);
+		setActionPeriod( actionPeriod / BLOB_PERIOD_SCALE);
+		setAnimationPeriod(BLOB_ANIMATION_MIN + Functions.getRand().nextInt(BLOB_ANIMATION_MAX -BLOB_ANIMATION_MIN));
 	}
 
 	
@@ -25,14 +31,14 @@ public class Ore_Blob extends Animated{
 }
 	
 	public void executeOreBlobActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-		Optional<EntityInterface> blobTarget = world.findNearest(getPosition(), new Vein());
+		Optional<Entity> blobTarget = world.findNearest(getPosition(), new Vein());
 		long nextPeriod = getActionPeriod();
 
 		if (blobTarget.isPresent()) {
 			Point tgtPos = blobTarget.get().getPosition();
 
 			if (moveToOreBlob(world, blobTarget.get(), scheduler)) {
-				EntityInterface quake = world.createQuake(tgtPos, imageStore.getImageList(world.QUAKE_KEY));
+				Entity quake = new Quake(tgtPos, imageStore.getImageList(world.QUAKE_KEY));
 
 				world.addEntity(quake);
 				nextPeriod += getActionPeriod();
@@ -43,7 +49,7 @@ public class Ore_Blob extends Animated{
 		scheduler.scheduleEvent(this, createActivityAction(world, imageStore), nextPeriod);
 	}
 	
-	public boolean moveToOreBlob(WorldModel world, EntityInterface entityInterface, EventScheduler scheduler) {
+	public boolean moveToOreBlob(WorldModel world, Entity entityInterface, EventScheduler scheduler) {
 		if (getPosition().adjacent(entityInterface.getPosition())) {
 			world.removeEntity(entityInterface);
 			scheduler.unscheduleAllEvents(entityInterface);
@@ -52,7 +58,7 @@ public class Ore_Blob extends Animated{
 			Point nextPos = nextPositionOreBlob(world, entityInterface.getPosition());
 
 			if (!getPosition().equals(nextPos)) {
-				Optional<EntityInterface> occupant = world.getOccupant(nextPos);
+				Optional<Entity> occupant = world.getOccupant(nextPos);
 				if (occupant.isPresent()) {
 					scheduler.unscheduleAllEvents(occupant.get());
 				}
@@ -67,7 +73,7 @@ public class Ore_Blob extends Animated{
 		int horiz = Integer.signum(destPos.x - getPosition().x);
 		Point newPos = new Point(getPosition().x + horiz, getPosition().y);
 
-		Optional<EntityInterface> occupant = world.getOccupant(newPos);
+		Optional<Entity> occupant = world.getOccupant(newPos);
 
 		if (horiz == 0 || (occupant.isPresent() && !(occupant.get().getClass().equals(new Ore().getClass())))) {
 			int vert = Integer.signum(destPos.y - getPosition().y);

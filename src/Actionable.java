@@ -1,5 +1,5 @@
 
-public abstract class Actionable extends EntityInterface{
+public abstract class Actionable extends Entity{
 
 	private int actionPeriod;
 	
@@ -17,7 +17,7 @@ public abstract class Actionable extends EntityInterface{
 	}
 	
 	
-	public ActionInterface createActivityAction(WorldModel world, ImageStore imageStore) {
+	public Action createActivityAction(WorldModel world, ImageStore imageStore) {
 		return new ActivityAction( this, world, imageStore, 0);
 	}
 	

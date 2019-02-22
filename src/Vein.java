@@ -5,6 +5,13 @@ import processing.core.PImage;
 
 public class Vein extends Actionable{
 
+   private  final String VEIN_KEY = "vein";
+   private  final int VEIN_NUM_PROPERTIES = 5;
+   private  final int VEIN_ID = 1;
+   private  final int VEIN_COL = 2;
+   private  final int VEIN_ROW = 3;
+   private  final int VEIN_ACTION_PERIOD = 4;
+	
 	public Vein(String id, Point position, List<PImage> images,
 		      int actionPeriod
 		      ) {
@@ -22,6 +29,15 @@ public class Vein extends Actionable{
 		
 	}
 	
+	public Vein(String[] properties, ImageStore imageStore)
+	{
+		setPosition( new Point(Integer.parseInt(properties[VEIN_COL]), Integer.parseInt(properties[VEIN_ROW])));
+     	setId(properties[VEIN_ID]);
+        setActionPeriod(Integer.parseInt(properties[VEIN_ACTION_PERIOD]));
+        setImages(imageStore.getImageList(VEIN_KEY));
+        setImageIndex(0);
+	}
+	
 	public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore) {
 		scheduler.scheduleEvent(this, createActivityAction(world, imageStore), getActionPeriod());
 	}
@@ -30,10 +46,9 @@ public class Vein extends Actionable{
 		Optional<Point> openPt = world.findOpenAround(getPosition());
 
 		if (openPt.isPresent()) {
-			EntityInterface ore = world.createOre(world.getORE_ID_PREFIX() + getId(), openPt.get(),
-					world.ORE_CORRUPT_MIN
-							+ Functions.getRand().nextInt(world.getORE_CORRUPT_MAX() - world.getORE_CORRUPT_MIN()),
-					imageStore.getImageList(world.getORE_KEY()));
+			Entity ore = new Ore(getId(), openPt.get(),
+					imageStore.getImageList(world.getORE_KEY())
+					);
 			world.addEntity(ore);
 			((Actionable)ore).scheduleActions(scheduler, world, imageStore);
 		}

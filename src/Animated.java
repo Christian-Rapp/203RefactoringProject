@@ -7,7 +7,7 @@ public abstract class Animated extends Actionable{
 		return animationPeriod;
 	}	
 	
-	public ActionInterface createAnimationAction(int repeatCount) {
+	public Action createAnimationAction(int repeatCount) {
 		return new AnimationAction( this, null, null, repeatCount);
 	}
 
