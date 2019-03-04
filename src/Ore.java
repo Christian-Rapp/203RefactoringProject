@@ -59,7 +59,11 @@ public class Ore extends Actionable{
 		executeOreActivity(world, imageStore, scheduler);	
 	}
 	
-
+	public <R> R accept(EntityVisitor<R> visitor)
+	{
+		return visitor.visit(this);
+	}
+	
 	
 	
 

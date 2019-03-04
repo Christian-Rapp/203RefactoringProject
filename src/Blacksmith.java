@@ -32,6 +32,11 @@ public class Blacksmith extends Entity{
         setImageIndex( 0);
 	}
 	
+	public <R> R accept(EntityVisitor<R> visitor)
+	{
+		return visitor.visit(this);
+	}
+	
 	
 	
 	

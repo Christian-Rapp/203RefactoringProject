@@ -93,6 +93,12 @@ public class Ore_Blob extends Animated{
 	{
 		executeOreBlobActivity(world, imageStore, scheduler);	
 	}
+	
+	public <R> R accept(EntityVisitor<R> visitor)
+	{
+		return visitor.visit(this);
+	}
+	
 }
 
 

@@ -47,4 +47,10 @@ public class Quake extends Animated{
 	{
 		executeQuakeActivity(world, imageStore, scheduler);	
 	}
+	
+	public <R> R accept(EntityVisitor<R> visitor)
+	{
+		return visitor.visit(this);
+	}
+	
 }

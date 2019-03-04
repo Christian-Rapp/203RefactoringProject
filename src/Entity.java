@@ -24,6 +24,8 @@ public abstract class Entity extends Drawable{
 		this.position = point;
 	}
 	
+	public abstract <R> R accept(EntityVisitor<R> visitor);
+	
 	
 	
 }

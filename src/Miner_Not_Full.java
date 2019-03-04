@@ -111,4 +111,10 @@ public class Miner_Not_Full extends Animated{
 
 		return newPos;
 	}
+	
+	public <R> R accept(EntityVisitor<R> visitor)
+	{
+		return visitor.visit(this);
+	}
+	
 }
