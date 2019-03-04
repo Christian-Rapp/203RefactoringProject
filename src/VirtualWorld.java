@@ -113,11 +113,22 @@ public final class VirtualWorld
       }
    }
 
+//   public void scheduleActions( WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
+//   {
+//      for (Entity entity : world.entities)
+//      {
+//    	 if (entity instanceof Actionable) {
+//         ((Actionable)entity).scheduleActions( eventScheduler, world, imageStore);
+//    	 }
+//    	 
+//    	 }
+//   }
+   
    public void scheduleActions( WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
    {
       for (Entity entity : world.entities)
       {
-    	 if (entity instanceof Actionable) {
+    	 if (entity.accept(new ActionableVisitor())) {
          ((Actionable)entity).scheduleActions( eventScheduler, world, imageStore);
     	 }
     	 

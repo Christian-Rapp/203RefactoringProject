@@ -35,7 +35,7 @@ public boolean adjacent(Point p2)
          (y == p2.y && Math.abs(x - p2.x) == 1);
    }
 
-public int distanceSquared(Functions functions, Point p2)
+public int distanceSquared(Point p2)
    {
       int deltaX = x - p2.x;
       int deltaY = y - p2.y;

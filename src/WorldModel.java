@@ -425,11 +425,11 @@ public static Optional<Entity> nearestEntity(List<Entity> entities,
 	      else
 	      {
 	         Entity nearest = entities.get(0);
-	         int nearestDistance = nearest.getPosition().distanceSquared(null, pos);
+	         int nearestDistance = nearest.getPosition().distanceSquared(pos);
 
 	         for (Entity other : entities)
 	         {
-	            int otherDistance = other.getPosition().distanceSquared(null, pos);
+	            int otherDistance = other.getPosition().distanceSquared(pos);
 
 	            if (otherDistance < nearestDistance)
 	            {

@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Optional;
+import java.util.function.*;
 
 import processing.core.PImage;
 
@@ -75,7 +76,7 @@ public class Miner_Full extends Animated{
 		if (getPosition().adjacent(target.getPosition())) {
 			return true;
 		} else {
-			Point nextPos = nextPositionMiner(world, target.getPosition());
+			Point nextPos = pathStrategyMiner(world, target.getPosition());
 
 			if (!getPosition().equals(nextPos)) {
 				Optional<Entity> occupant = world.getOccupant(nextPos);
@@ -103,6 +104,27 @@ public class Miner_Full extends Animated{
 		}
 
 		return newPos;
+	}
+	
+	public Point pathStrategyMiner(WorldModel world, Point destPos) {
+		Point start = getPosition();
+		Point end = destPos;
+		Predicate<Point> canPassThrough = point -> !world.isOccupied(point); 
+		BiPredicate<Point, Point> withinReach = (begin, finish) -> begin.adjacent(finish);
+		
+//		PathingStrategy  strategy= new SingleStepPathingStrategy();
+		PathingStrategy  strategy= new AStarStrategy();
+		Point point = start;
+		try {
+		point = strategy.computePath(start, end, canPassThrough, withinReach, strategy.CARDINAL_NEIGHBORS).get(0);}
+		
+		catch (IndexOutOfBoundsException e)
+		{
+			
+		}
+		
+		return point;	
+		
 	}
 	
 	public <R> R accept(EntityVisitor<R> visitor)

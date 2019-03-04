@@ -10,12 +10,6 @@ final class WorldView
    public int tileWidth;
    public int tileHeight;
    public Viewport viewport;
-   
-//   public final int COLOR_MASK = 0xffffff;
-//   public final int KEYED_IMAGE_MIN = 5;
-//   private final int KEYED_RED_IDX = 2;
-//   private final int KEYED_GREEN_IDX = 3;
-//   private final int KEYED_BLUE_IDX = 4;
 
    public WorldView(int numRows, int numCols, PApplet screen, WorldModel world,
       int tileWidth, int tileHeight)
