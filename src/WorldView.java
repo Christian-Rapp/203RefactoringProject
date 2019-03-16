@@ -50,8 +50,8 @@ public void drawBackground()
 	      for (Entity entity : world.entities)
 	      {
 	         Point pos = entity.getPosition();
-	
-	         if (viewport.contains( pos))
+	         
+	         if (viewport.contains(pos) && !(entity instanceof DevitoShrine))
 	         {
 	            Point viewPoint = viewport.worldToViewport( pos.x, pos.y);
 	            screen.image(ImageStore.getCurrentImage(entity),

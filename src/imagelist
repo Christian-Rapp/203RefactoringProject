@@ -17,6 +17,25 @@ miner images/miner2.bmp 252 252 252 0
 miner images/miner3.bmp 252 252 252 0
 miner images/miner4.bmp 252 252 252 0
 miner images/miner5.bmp 252 252 252 0
+monk images/MonkWalk1.bmp 252 252 252 0
+monk images/MonkWalk2.bmp 252 252 252 0
+monk images/MonkWalk3.bmp 252 252 252 0
+monk images/MonkWalk4.bmp 252 252 252 0
+monk images/MonkDying1.bmp 252 252 252 0
+monk images/MonkDying2.bmp 252 252 252 0
+monk images/MonkDying3.bmp 252 252 252 0
+monk images/MonkDying4.bmp 252 252 252 0
+monk images/MonkDying5.bmp 252 252 252 0
+turtle images/TurtleLeft1.bmp 252 252 252 0
+turtle images/TurtleLeft2.bmp 252 252 252 0
+turtle images/TurtleLeft3.bmp 252 252 252 0
+turtle images/TurtleLeft4.bmp 252 252 252 0
+turtle images/TurtleshellLeft.bmp 252 252 252 0
+turtle images/TurtleshellRight.bmp 252 252 252 0
+turtle images/TurtleRight1.bmp 252 252 252 0
+turtle images/TurtleRight2.bmp 252 252 252 0
+turtle images/TurtleRight3.bmp 252 252 252 0
+turtle images/TurtleRight4.bmp 252 252 252 0
 obstacle images/obstacle.bmp
 ore images/ore.bmp 201 26 26 0
 quake images/quake1.bmp 255 255 255 0
@@ -27,4 +46,14 @@ quake images/quake5.bmp 255 255 255 0
 quake images/quake6.bmp 255 255 255 0
 rocks images/rock.bmp
 vein images/vein.bmp
+shrine images/GoldenDanny1.bmp 252 252 252 0
+shrine images/GoldenDanny2.bmp 252 252 252 0
+shrine images/GoldenDanny3.bmp 252 252 252 0
+shrine images/GoldenDanny4.bmp 252 252 252 0
+shrine images/GoldenDanny5.bmp 252 252 252 0
+shrine images/GoldenDanny6.bmp 252 252 252 0
+shrine images/GoldenDanny7.bmp 252 252 252 0
+shrine images/GoldenDanny8.bmp 252 252 252 0
+shrine images/GoldenDanny9.bmp 252 252 252 0
+shrine images/GoldenDanny10.bmp 252 252 252 0
 background_default images/none.bmp

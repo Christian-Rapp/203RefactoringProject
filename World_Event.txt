@@ -1,0 +1,11 @@
+1) Trigger the event by clicking the mouse at a position inside the viewport
+
+2) When the event is triggered, a golden statue of Danny Devito rises slowly out of the ground.
+The statue is so large that it causes quakes at nearby obstabcles destroying them.
+
+3) Nearby miners are transformed into Monks that worship the shrine. 
+These monks path to the base of the nearest Danny Devito and throw themselves at his feet killing themselves.
+
+4) The new entity is a turtle. It seeks warmth, and goes to find the nearest blacksmith. 
+But the turtle is scared of miners. If a miner is nearby he will go into his shell and hide. 
+If a turtle spots an oreblob, he becomes much faster and goes to eat the oreblob.

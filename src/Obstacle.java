@@ -14,11 +14,10 @@ public class Obstacle extends Entity{
 		
 		setId(id);
 		setPosition(position);
-		setImages( images);
-		setImageIndex( 0);
+		setImages(images);
+		setImageIndex(0);
 		
 	}
-	
 	
 	public Obstacle(String[] properties, ImageStore imageStore)
 	{

@@ -40,5 +40,17 @@ public class AllFalseEntityVisitor implements EntityVisitor<Boolean>{
 	public Boolean visit(Blacksmith blacksmith) {
 		return false;
 	}
+	
+	public Boolean visit(DevitoShrine shrine) {
+		return false;
+	}
+	
+	public Boolean visit(Monk monk) {
+		return false;
+	}
 
+
+	public Boolean visit(Turtle turtle) {
+		return false;
+	}
 }

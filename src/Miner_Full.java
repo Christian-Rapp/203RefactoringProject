@@ -24,12 +24,13 @@ public class Miner_Full extends Animated{
 		
 		setId(id);
 		setPosition(position);
-		setImages( images);
+		setImages(images);
 		setImageIndex( 0);
 		setActionPeriod( actionPeriod);
 		setAnimationPeriod( animationPeriod);
 		this.resourceLimit = resourceLimit;
 		this.resourceCount = resourceLimit;
+		
 	}
 	
 	public Miner_Full(String[] properties, ImageStore imageStore)

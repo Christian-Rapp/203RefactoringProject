@@ -1,10 +1,12 @@
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import processing.core.PImage;
 
@@ -15,6 +17,7 @@ final class WorldModel
    public Background background[][];
    public Entity occupancy[][];
    public Set<Entity> entities;
+   public List<DevitoShrine> shrines;
    
    private  final String BLOB_KEY = "blob";
       
@@ -53,6 +56,7 @@ final class WorldModel
       this.background = new Background[numRows][numCols];
       this.occupancy = new Entity[numRows][numCols];
       this.entities = new HashSet<>();
+      this.shrines = new LinkedList<>();
 
       for (int row = 0; row < numRows; row++)
       {
@@ -60,13 +64,15 @@ final class WorldModel
       }
    }
 
-public void addEntity(Entity entity)
+public boolean addEntity(Entity entity)
 {
 if (withinBounds(entity.getPosition()))
    {
       setOccupancyCell(entity.getPosition(), entity);
       entities.add(entity);
+      return true;
    }
+	return false;
 }
 
 public void moveEntity(Entity entity, Point pos)
@@ -137,6 +143,49 @@ public boolean parseBackground(String[] properties, ImageStore imageStore)
 		      return properties.length == Background.BGND_NUM_PROPERTIES;
 		   }
 
+public void parseDevito(DevitoShrine shrine, EventScheduler scheduler, ImageStore imageStore)
+{
+   
+      tryAddEntity(shrine);
+      shrine.scheduleActions(scheduler, this, imageStore);
+   
+}
+
+public void stageDanny(int xPos, int yPos, List<PImage> currentImage, int stage)
+{
+	  int currStage = stage - 1;
+	  List<PImage> curr = new LinkedList<PImage>();
+	  for(int shrineCount = 0; shrineCount < stage * 2; shrineCount ++)
+	  {
+		  
+		  curr.clear();
+		  curr.add(currentImage.get(shrineCount));
+		  
+		  List<PImage> copy = curr.stream()
+				  .collect(Collectors.toList());
+		   removeEntityAt(new Point(xPos , yPos - currStage));
+		   Obstacle shrine = new Obstacle("shrine" + shrineCount, new Point(xPos, yPos - currStage), copy);
+		   tryAddEntity(shrine);
+		   
+		  
+		   shrineCount++;
+		   
+		   curr.clear();
+		   curr.add(currentImage.get(shrineCount));
+		   List<PImage> copy2 = curr.stream()
+					  .collect(Collectors.toList());
+		   
+		   removeEntityAt(new Point(xPos + 1, yPos - currStage));
+		   Obstacle shrine2 = new Obstacle("shrine" + shrineCount, new Point(xPos + 1, yPos  - currStage), copy2);
+		   tryAddEntity(shrine2);
+		   currStage--;
+		   
+		   
+	  }
+	   
+}
+
+
 //public boolean parseBackground(String[] properties, ImageStore imageStore)
 //	{
 //	   if (properties.length == Background.BGND_NUM_PROPERTIES)
@@ -178,6 +227,17 @@ public boolean parseMiner(String[] properties, ImageStore imageStore)
 	
 	   return properties.length == MINER_NUM_PROPERTIES;
 	}
+
+public boolean parseTurtle(String[] properties, ImageStore imageStore)
+{
+	String id = properties[1];
+	int xcoord = Integer.parseInt(properties[2]);
+	int ycoord = Integer.parseInt(properties[3]);
+      Entity entity = new Turtle(id, new Point(xcoord, ycoord), imageStore.getImageList("turtle"));
+      tryAddEntity(entity);
+
+   return true;
+}
 
 //public boolean parseObstacle(String[] properties, ImageStore imageStore)
 //		   {
@@ -329,6 +389,8 @@ public boolean processLine(String line, ImageStore imageStore)
 		            return parseSmith(properties, imageStore);
 		         case VEIN_KEY:
 		            return parseVein(properties, imageStore);
+		         case "turtle":
+		        	 return parseTurtle(properties, imageStore);
 		         }
 		      }
 
@@ -442,16 +504,19 @@ public static Optional<Entity> nearestEntity(List<Entity> entities,
 	      }
 	   }
 
-public void tryAddEntity(Entity entity)
+public boolean tryAddEntity(Entity entity)
    {
+		
+	
       if (isOccupied(entity.getPosition()))
       {
+    	  
          // arguably the wrong type of exception, but we are not
          // defining our own exceptions yet
          throw new IllegalArgumentException("position occupied");
       }
-
-      addEntity(entity);
+      
+      return addEntity(entity);
    }
 
 public Optional<Point> findOpenAround(Point pos)

@@ -1,7 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.*;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
 import processing.core.*;
 
 public final class VirtualWorld
@@ -112,6 +115,20 @@ public final class VirtualWorld
 		view.shiftView( dx, dy);
       }
    }
+   
+   public void mouseClicked() {
+	   
+	   int xPos = mouseX / 32;
+	   int yPos = mouseY / 32;
+	   List<PImage>currentImage = imageStore.getImageList("shrine");
+	   world.removeEntityAt(new Point(xPos - 1, yPos -1));
+	   world.parseDevito(new DevitoShrine("shrine", new Point(xPos - 1, yPos - 1), currentImage), scheduler, imageStore);
+	   
+	 }
+  
+   
+   
+  
 
 //   public void scheduleActions( WorldModel world, EventScheduler eventScheduler, ImageStore imageStore)
 //   {
@@ -129,7 +146,7 @@ public final class VirtualWorld
       for (Entity entity : world.entities)
       {
     	 if (entity.accept(new ActionableVisitor())) {
-         ((Actionable)entity).scheduleActions( eventScheduler, world, imageStore);
+         ((Actionable)entity).scheduleActions(eventScheduler, world, imageStore);
     	 }
     	 
     	 }

@@ -25,5 +25,16 @@ public class ActionableVisitor extends AllFalseEntityVisitor{
 	public Boolean visit(Vein vein) {
 		return true;
 	}
+	
+	public Boolean visit(DevitoShrine shrine)
+	{
+		return true;
+	}
+	
+	public Boolean visit(Turtle turtle)
+	{
+		return true;
+	}
+	
 
 }
